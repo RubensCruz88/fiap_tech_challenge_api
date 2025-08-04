@@ -21,6 +21,6 @@ jobs:
      -  name: Build and Push Docker Image
         run: |
           docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-          docker build -t $DOCKER_USERNAME/tech_challenge_2:latest --build-arg DB_HOST=${{ secrets.DB_HOST }} --build-arg DB_PORT=${{ secrets.DB_PORT }} --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} --build-arg DB_USERNAME=${{ secrets.DB_USERNAME }} --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} --build-arg DB_NAME=${{ secrets.DB_NAME }} --build-arg DB_SSL=${{ secrets.DB_SSL }} .
-          docker push $DOCKER_USERNAME/tech_challenge_2:latest
+          docker build -t $DOCKER_USERNAME/tech_challenge_api:latest --build-arg DB_HOST=${{ secrets.DB_HOST }} --build-arg DB_PORT=${{ secrets.DB_PORT }} --build-arg JWT_SECRET=${{ secrets.JWT_SECRET }} --build-arg DB_USERNAME=${{ secrets.DB_USERNAME }} --build-arg DB_PASSWORD=${{ secrets.DB_PASSWORD }} --build-arg DB_NAME=${{ secrets.DB_NAME }} --build-arg DB_SSL=${{ secrets.DB_SSL }} .
+          docker push $DOCKER_USERNAME/tech_challenge_api:latest
 
