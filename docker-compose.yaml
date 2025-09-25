@@ -3,13 +3,14 @@ version: '3.9'
 services:
   postgres:
     image: postgres:17
+    container_name: postgres
     environment:
       POSTGRES_USER: ${DB_USERNAME}
       POSTGRES_PASSWORD: ${DB_PASSWORD}
       PGDATA: /data/postgres
       POSTGRES_DB: ${DB_NAME}
     volumes:
-      - postgres_data:/data/postgres
+      - ./pg_data:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     networks:
@@ -25,14 +26,8 @@ services:
     build: .
     ports:
       - "${APP_PORT:-3000}:3000"
-    environment:
-      - DB_HOST=${DB_HOST}
-      - DB_PORT=${DB_PORT}
-      - DB_USERNAME=${DB_USERNAME}
-      - DB_PASSWORD=${DB_PASSWORD}
-      - DB_NAME=${DB_NAME}
-      - JWT_SECRET=${JWT_SECRET}
-      - APP_PORT=3000
+    env_file:
+     - .env
     networks:
       - app-network
     depends_on:
@@ -43,6 +38,3 @@ services:
 networks:
   app-network:
     driver: bridge
-
-volumes:
-  postgres_data:
