@@ -27,6 +27,7 @@ export class UsuarioService {
 			usuarioCriado.id,
 			usuarioCriado.nome,
 			usuarioCriado.email,
+			usuarioCriado.tipo,
 			usuarioCriado.createdAt,
 			usuarioCriado.updatedAt
 		)
@@ -40,6 +41,7 @@ export class UsuarioService {
 			usuario.id,
 			usuario.nome,
 			usuario.email,
+			usuario.tipo,
 			usuario.createdAt,
 			usuario.updatedAt
 		))
@@ -58,6 +60,7 @@ export class UsuarioService {
 			usuario.id,
 			usuario.nome,
 			usuario.email,
+			usuario.tipo,
 			usuario.createdAt,
 			usuario.updatedAt
 		)

@@ -1,4 +1,5 @@
-import { IsEmail, IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { IsEmail, IsEnum, IsNotEmpty, MaxLength, MinLength } from "class-validator";
+import { UserRole } from "../usuario.entity";
 
 export class CriaUsuarioDTO {
 
@@ -13,4 +14,7 @@ export class CriaUsuarioDTO {
 	@MinLength(6, {message: 'A senha prcisa ter pelo menos 6 caracteres'})
 	@MaxLength(50,{message: 'O nome deve ter nom máximo 50 caracteres'})
 	senha: string;
+
+	@IsEnum(UserRole)
+	tipo: UserRole
 }

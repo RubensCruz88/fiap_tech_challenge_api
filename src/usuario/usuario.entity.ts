@@ -9,6 +9,12 @@ import {
 	UpdateDateColumn
 } from 'typeorm';
 
+export enum UserRole {
+	admin = 'admin',
+	professor = 'professor',
+	aluno = 'aluno'
+}
+
 @Entity({name: 'usuarios'})
 export class UsuarioEntity {
 	@PrimaryGeneratedColumn('uuid')
@@ -22,6 +28,9 @@ export class UsuarioEntity {
 
 	@Column({name: 'email', length: 70, nullable: false, unique: true})
 	email: string;
+
+	@Column({name: 'tipo', type: 'enum', enum: UserRole, default: UserRole.aluno})
+	tipo: UserRole;
 
 	@CreateDateColumn({name: 'created_at'})
 	createdAt: Date;

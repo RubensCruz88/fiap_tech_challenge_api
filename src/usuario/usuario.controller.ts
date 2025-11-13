@@ -27,6 +27,7 @@ export class UsuarioController {
 		const usuarioEntity = new UsuarioEntity();
 		usuarioEntity.email = dadosDoUsuario.email;
 		usuarioEntity.nome = dadosDoUsuario.nome;
+		usuarioEntity.tipo = dadosDoUsuario.tipo;
 		usuarioEntity.senha = dadosDoUsuario.senha;
 
 		return this.usuarioService.criaUsuario(usuarioEntity)
