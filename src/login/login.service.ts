@@ -33,7 +33,8 @@ export class LoginService {
 		const payload = {
 			usuario: usuario.nome, 
 			sub: usuario.id,
-			email: usuario.email
+			email: usuario.email,
+			tipo: usuario.tipo
 		};
 
 		return {

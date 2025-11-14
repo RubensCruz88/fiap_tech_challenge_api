@@ -1,4 +1,4 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
+import { ForbiddenException, Injectable, NotFoundException } from "@nestjs/common";
 import { InjectRepository } from "@nestjs/typeorm";
 import { PostEntity } from "./post.entity";
 import { Repository, Like } from "typeorm";
@@ -15,8 +15,8 @@ export class PostService {
 		private readonly usuarioRepository: Repository<UsuarioEntity>
 	) {}
 
-	async criaPost(dadosPost: CriaPostDTO) {
-		const usuario = await this.usuarioRepository.findOneBy({id: dadosPost.usuarioId})
+	async criaPost(userId: string,dadosPost: CriaPostDTO) {
+		const usuario = await this.usuarioRepository.findOneBy({id: userId})
 
 		if(!usuario) {
 			throw new NotFoundException('Usuario não encontrado')
@@ -60,12 +60,22 @@ export class PostService {
 		return post
 	}
 
-	async editaPost(postId: string, dadosPost: EditaPostDTO) {
-		const post = await this.postRepository.findOneBy({ id: postId })
+	async editaPost(user: any,postId: string, dadosPost: EditaPostDTO) {
+		const post = await this.postRepository.createQueryBuilder('post')
+			.innerJoin('post.usuario','usuario')
+			.select([
+				'post',
+				'usuario.id'
+			])
+			.where('post.id = :postId',{ postId })
+			.getOne()
 
 		if (!post) {
 			throw new NotFoundException('Post não encontrado')
 		}
+
+		if(user.tipo !== 'admin' && user.sub !== post.usuario.id)
+			throw new ForbiddenException("usuário sem permissão de editar post")
 
 		if (dadosPost.titulo) {
 			post.titulo = dadosPost.titulo
@@ -78,12 +88,22 @@ export class PostService {
 		return await this.postRepository.save(post)
 	}
 
-	async deletaPost(postId: string) {
-		const post = await this.postRepository.findOneBy({ id: postId })
+	async deletaPost(user: any, postId: string) {
+		const post = await this.postRepository.createQueryBuilder('post')
+			.innerJoin('post.usuario','usuario')
+			.select([
+				'post',
+				'usuario.id'
+			])
+			.where('post.id = :postId',{ postId })
+			.getOne()
 
 		if (!post) {
 			throw new NotFoundException('Post não encontrado')
 		}
+
+		if(user.tipo !== 'admin' && user.sub !== post.usuario.id)
+			throw new ForbiddenException("usuário sem permissão de editar post")
 
 		await this.postRepository.remove(post)
 		return { message: 'Post deletado com sucesso' }

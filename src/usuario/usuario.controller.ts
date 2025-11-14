@@ -3,6 +3,7 @@ import { CriaUsuarioDTO } from "./dto/CriaUsuario.dto";
 import { UsuarioEntity } from "./usuario.entity";
 import { UsuarioService } from "./usuario.service";
 import { AuthGuard } from "src/guards/auth.guard";
+import { ProfessorRoleGuard } from "src/guards/professorRole.guard";
 
 @Controller('/usuarios')
 export class UsuarioController {
@@ -11,7 +12,7 @@ export class UsuarioController {
 		private usuarioService: UsuarioService,
 	) {}
 
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuard,ProfessorRoleGuard)
 	@Get()
 	async listaUsuarios() {
 		return await this.usuarioService.listaUsuarios();
@@ -19,9 +20,11 @@ export class UsuarioController {
 
 	@Get(':usuarioId')
 	async buscaUsuarioPorId(@Param('usuarioId') usuarioId: string) {
+	
 		return await this.usuarioService.buscaUsuarioPorId(usuarioId)
 	}
 
+	@UseGuards(AuthGuard,ProfessorRoleGuard)
 	@Post()
 	async criaUsuario(@Body() dadosDoUsuario: CriaUsuarioDTO) {
 		const usuarioEntity = new UsuarioEntity();

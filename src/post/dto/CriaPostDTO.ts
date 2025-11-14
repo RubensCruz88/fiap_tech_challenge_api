@@ -4,15 +4,6 @@ import { ApiProperty } from "@nestjs/swagger";
 export class CriaPostDTO {
 
 	@ApiProperty({ 
-		description: 'ID do usuário autor do post',
-		example: '123e4567-e89b-12d3-a456-426614174000',
-		format: 'uuid'
-	})
-	@IsNotEmpty({message: 'O ID do usuário não pode estar vazio'})
-	@IsUUID(4, {message: 'ID do usuário deve ser um UUID válido'})
-	usuarioId: string;
-
-	@ApiProperty({ 
 		description: 'Título do post',
 		example: 'Introdução à Matemática Básica',
 		minLength: 3,

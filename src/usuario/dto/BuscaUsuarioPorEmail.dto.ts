@@ -3,6 +3,7 @@ export class BuscaUsuarioPorEmailDTO {
 		readonly id: string,
 		readonly nome: string,
 		readonly email: string,
-		readonly senha: string
+		readonly senha: string,
+		readonly tipo: string
 	){}
 }

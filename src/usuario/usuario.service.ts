@@ -76,7 +76,8 @@ export class UsuarioService {
 			usuario.id,
 			usuario.nome,
 			usuario.email,
-			usuario.senha
+			usuario.senha,
+			usuario.tipo
 		)
 	}
 

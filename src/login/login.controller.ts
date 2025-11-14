@@ -1,7 +1,8 @@
-import { Body, Controller, Post } from "@nestjs/common";
+import { Body, Controller, Get, NotImplementedException, Post, Request, UseGuards } from "@nestjs/common";
 import { LoginDto } from "./dto/login.dto";
 import { LoginService } from "./login.service";
 import { ApiTags, ApiOperation, ApiResponse } from "@nestjs/swagger";
+import { AuthGuard } from "src/guards/auth.guard";
 
 @ApiTags('Autenticação')
 @Controller('/login')
@@ -32,5 +33,11 @@ export class LoginController {
 		const {email, senha} = loginDto
 
 		return this.loginService.login(email, senha)
+	}
+
+	@UseGuards(AuthGuard)
+	@Get('me')
+	async getUserInfo(@Request() request) {
+		return request.user
 	}
 }

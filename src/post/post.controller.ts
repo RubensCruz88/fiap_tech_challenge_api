@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, HttpException, HttpStatus, Param, Post, Put, Query, Request, UseGuards } from "@nestjs/common";
 import { UuidValidationPipe } from "../common/pipes/uuid-validation.pipe";
 import { PostService } from "./post.service";
 import { ListPostsDTO } from "./dto/ListaPosts.dto";
@@ -7,6 +7,8 @@ import { AuthGuard } from "src/guards/auth.guard";
 import { PostPorIdDTO } from "./dto/PostPorId.dto";
 import { EditaPostDTO } from "./dto/EditaPostDTO";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
+import { ProfessorRoleGuard } from "src/guards/professorRole.guard";
+import { request } from "http";
 
 @ApiTags('Posts')
 @Controller('/posts')
@@ -16,18 +18,20 @@ export class PostController {
 		private postService: PostService
 	) {}
 
-	@UseGuards(AuthGuard)
+	@UseGuards(AuthGuard,ProfessorRoleGuard)
 	@ApiBearerAuth('access-token')
 	@Post()
 	@ApiOperation({ summary: 'Criar um novo post' })
 	@ApiResponse({ status: 201, description: 'Post criado com sucesso' })
 	@ApiResponse({ status: 400, description: 'Dados inválidos' })
 	async criaPost(
+		@Request() request,
 		@Body() dadosPost: CriaPostDTO
 	) {
-		return await this.postService.criaPost(dadosPost)
+		return await this.postService.criaPost(request.user.sub,dadosPost)
 	}
 
+	@UseGuards(AuthGuard)
 	@Get()
 	@ApiOperation({ summary: 'Listar todos os posts' })
 	@ApiResponse({ status: 200, description: 'Lista de posts retornada com sucesso', type: [ListPostsDTO] })
@@ -43,6 +47,7 @@ export class PostController {
 		))
 	}
 
+	@UseGuards(AuthGuard)
 	@Get('search')
 	@ApiOperation({ summary: 'Buscar posts por palavra-chave' })
 	@ApiResponse({ status: 200, description: 'Posts encontrados', type: [ListPostsDTO] })
@@ -66,6 +71,7 @@ export class PostController {
 		))
 	}
 
+	@UseGuards(AuthGuard)
 	@Get(':postId')
 	@ApiOperation({ summary: 'Obter detalhes de um post' })
 	@ApiResponse({ status: 200, description: 'Post encontrado', type: PostPorIdDTO })
@@ -93,10 +99,11 @@ export class PostController {
 	@ApiResponse({ status: 401, description: 'Token de acesso inválido' })
 	@ApiResponse({ status: 404, description: 'Post não encontrado' })
 	async editaPost(
+		@Request() request,
 		@Param('postId', UuidValidationPipe) postId: string,
 		@Body() dadosPost: EditaPostDTO
 	) {
-		const post = await this.postService.editaPost(postId, dadosPost)
+		const post = await this.postService.editaPost(request.user,postId, dadosPost)
 		return post
 	}
 
@@ -108,7 +115,10 @@ export class PostController {
 	@ApiResponse({ status: 400, description: 'ID inválido' })
 	@ApiResponse({ status: 401, description: 'Token de acesso inválido' })
 	@ApiResponse({ status: 404, description: 'Post não encontrado' })
-	async deletaPost(@Param('postId', UuidValidationPipe) postId: string) {
-		return await this.postService.deletaPost(postId)
+	async deletaPost(
+		@Request() request,
+		@Param('postId', UuidValidationPipe
+	) postId: string) {
+		return await this.postService.deletaPost(request.user,postId)
 	}
 }
