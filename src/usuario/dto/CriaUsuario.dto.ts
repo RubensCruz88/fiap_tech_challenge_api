@@ -11,7 +11,7 @@ export class CriaUsuarioDTO {
 	@MaxLength(70,{message: 'O e-mail deve ter nom máximo 70 caracteres'})
 	email: string;
 
-	@MinLength(6, {message: 'A senha prcisa ter pelo menos 6 caracteres'})
+	@MinLength(5, {message: 'A senha prcisa ter pelo menos 5 caracteres'})
 	@MaxLength(50,{message: 'O nome deve ter nom máximo 50 caracteres'})
 	senha: string;
 
