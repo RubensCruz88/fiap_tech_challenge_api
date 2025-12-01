@@ -8,11 +8,11 @@ export class CriaUsuarioDTO {
 	nome: string;
 
 	@IsEmail(undefined, {message: 'O e-mail informado é inválido'})
-	@MaxLength(70,{message: 'O e-mail deve ter nom máximo 70 caracteres'})
+	@MaxLength(70,{message: 'O e-mail deve ter no máximo 70 caracteres'})
 	email: string;
 
 	@MinLength(5, {message: 'A senha prcisa ter pelo menos 5 caracteres'})
-	@MaxLength(50,{message: 'O nome deve ter nom máximo 50 caracteres'})
+	@MaxLength(50,{message: 'A senha deve ter no máximo 50 caracteres'})
 	senha: string;
 
 	@IsEnum(UserRole)

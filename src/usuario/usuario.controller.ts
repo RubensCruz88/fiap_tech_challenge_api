@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, UseGuards } from "@nestjs/common";
+import { Body, Controller, Delete, Get, Param, Post, Put, UseGuards } from "@nestjs/common";
 import { CriaUsuarioDTO } from "./dto/CriaUsuario.dto";
 import { UsuarioEntity } from "./usuario.entity";
 import { UsuarioService } from "./usuario.service";
@@ -34,6 +34,21 @@ export class UsuarioController {
 		usuarioEntity.senha = dadosDoUsuario.senha;
 
 		return this.usuarioService.criaUsuario(usuarioEntity)
+	}
+
+	@UseGuards(AuthGuard,ProfessorRoleGuard)
+	@Put(':usuarioId')
+	async editaUsuario(
+		@Param('usuarioId') usuarioId: string,
+		@Body() dadosDoUsuario: CriaUsuarioDTO
+	) {
+		const usuarioEntity = new UsuarioEntity();
+		usuarioEntity.email = dadosDoUsuario.email;
+		usuarioEntity.nome = dadosDoUsuario.nome;
+		usuarioEntity.tipo = dadosDoUsuario.tipo;
+		usuarioEntity.senha = dadosDoUsuario.senha;
+
+		return this.usuarioService.editaUsuario(usuarioId,usuarioEntity)
 	}
 
 	@Delete(':usuarioId')

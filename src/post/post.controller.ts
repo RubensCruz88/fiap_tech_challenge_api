@@ -8,7 +8,6 @@ import { PostPorIdDTO } from "./dto/PostPorId.dto";
 import { EditaPostDTO } from "./dto/EditaPostDTO";
 import { ApiTags, ApiOperation, ApiResponse, ApiBearerAuth } from '@nestjs/swagger';
 import { ProfessorRoleGuard } from "src/guards/professorRole.guard";
-import { request } from "http";
 
 @ApiTags('Posts')
 @Controller('/posts')
@@ -71,6 +70,22 @@ export class PostController {
 		))
 	}
 
+	@UseGuards(AuthGuard, ProfessorRoleGuard)
+	@Get('meusPosts')
+	@ApiOperation({ summary: 'Listar os posts do usuário logado' })
+	@ApiResponse({ status: 200, description: 'Lista de posts retornada com sucesso', type: [ListPostsDTO] })
+	async listaPostsUsuarioLogado(@Request() request) {
+		const posts = await this.postService.listarPostsPorUsuario(request.user.sub)
+
+		return posts.map(post => new ListPostsDTO(
+			post.id,
+			post.usuario.nome,
+			post.titulo,
+			post.createdAt,
+			post.updatedAt
+		))
+	}
+
 	@UseGuards(AuthGuard)
 	@Get(':postId')
 	@ApiOperation({ summary: 'Obter detalhes de um post' })
@@ -121,4 +136,5 @@ export class PostController {
 	) postId: string) {
 		return await this.postService.deletaPost(request.user,postId)
 	}
+
 }

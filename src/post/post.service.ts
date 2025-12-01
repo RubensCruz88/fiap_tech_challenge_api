@@ -126,4 +126,19 @@ export class PostService {
 
 		return posts
 	}
+
+	async listarPostsPorUsuario(userId: string) {
+		const posts = await this.postRepository.find({
+			relations: {
+				usuario: true
+			},
+			where: {
+				usuario: {
+					id: userId
+				}
+			}
+		})
+
+		return posts
+	}
 }
