@@ -36,23 +36,27 @@ export class UsuarioService {
 	}
 
 	async editaUsuario(usuarioId: string, usuario: UsuarioEntity) {
-		const usuarioComEmailJaCriado = await this.usuarioRepository.findOneBy({id: usuarioId})
+		const usuarioExistente = await this.usuarioRepository.findOneBy({id: usuarioId})
 
-		if(!usuarioComEmailJaCriado) {
+		if(!usuarioExistente) {
 			throw new NotFoundException('Usuario não encontrado')
 		}
 
-		usuario.id = usuarioId;
-		usuario.senha = await hash(usuario.senha,10)
+		usuarioExistente.nome = usuario.nome;
+		usuarioExistente.email = usuario.email;
+		usuarioExistente.tipo = usuario.tipo;
+		if(usuario.senha) {
+			usuarioExistente.senha = await hash(usuario.senha,10)
+		}
 
-		const usuarioCriado = await this.usuarioRepository.save(usuario)
+		const usuarioAtualizado = await this.usuarioRepository.save(usuarioExistente)
 		const usuarioFormatado = new ListaUsuarioDTO(
-			usuarioCriado.id,
-			usuarioCriado.nome,
-			usuarioCriado.email,
-			usuarioCriado.tipo,
-			usuarioCriado.createdAt,
-			usuarioCriado.updatedAt
+			usuarioAtualizado.id,
+			usuarioAtualizado.nome,
+			usuarioAtualizado.email,
+			usuarioAtualizado.tipo,
+			usuarioAtualizado.createdAt,
+			usuarioAtualizado.updatedAt
 		)
 
 		return usuarioFormatado
